@@ -561,6 +561,75 @@ contactInput.addEventListener('keydown', e => {
     e.preventDefault();
   }
 });
-</script>
+ <div class="section-title">STEP 4 — Contact Details</div>
+<div>
+  <div class="row">
+    <div class="col">
+      <label>Contact Name</label>
+      <input id="contactName" type="text" placeholder="Full name (alphabets only)" />
+    </div>
+    <div style="width:130px">
+      <label class="toggle-label">
+        <input class="checkbox" id="contactNameEnabled" type="checkbox" checked/> Enable
+      </label>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:10px">
+    <div class="col">
+      <label>Contact Number</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div style="width:70px;display:flex;align-items:center;justify-content:center;background:#f3f4f8;border-radius:8px">+91</div>
+        <input id="contactNumber" type="text" placeholder="Enter 10-digit number only" maxlength="10" />
+      </div>
+    </div>
+    <div style="width:130px">
+      <label class="toggle-label">
+        <input class="checkbox" id="contactNumberEnabled" type="checkbox" checked/> Enable
+      </label>
+    </div>
+  </div>
+
+  <div style="margin-top:10px">
+    <label>Residential Address</label>
+    <textarea id="address" rows="3" placeholder="Full address"></textarea>
+  </div>
+
+  <div style="margin-top:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="section-title">Custom fields (Contact)</div>
+      <div class="muted">Up to 2</div>
+    </div>
+    <div class="custom-list" id="contactCustoms"></div>
+    <div style="margin-top:8px">
+      <button id="addContactCustom" class="btn secondary">+ Add custom field</button>
+    </div>
+  </div>
+</div>
+ const contact = {
+  contactName: $('contactNameEnabled').checked ? $('contactName').value.trim() : null,
+  contactNumber: $('contactNumberEnabled').checked ? $('contactNumber').value.trim() : null,
+  address: $('address').value.trim(),
+  customs: contactCustoms
+};  
+  
+</out.push('<div style="height:8px"></div>');
+out.push(`<div style="font-weight:700;margin-top:6px">Contact</div>`);
+if(p.contact.contactName) out.push(`<div><strong>Contact Name:</strong> ${escapeHtml(p.contact.contactName)}</div>`);
+if(p.contact.contactNumber) out.push(`<div><strong>Contact Number:</strong> +91 ${escapeHtml(p.contact.contactNumber)}</div>`);
+if(p.contact.address) out.push(`<div><strong>Address:</strong> ${escapeHtml(p.contact.address)}</div>`);
+if(p.contact.customs && p.contact.customs.length)
+  p.contact.customs.forEach(c=> out.push(`<div><strong>${escapeHtml(c.label)}:</strong> ${escapeHtml(c.value)}</div>`));script>
 </body>
 </html>
+  // Allow only alphabets for contact name
+$('contactName').addEventListener('input', e=>{
+  e.target.value = e.target.value.replace(/[^a-zA-Z\\s]/g, '');
+});
+// Digits only for contact number
+$('contactNumber').addEventListener('input', e=>{
+  e.target.value = e.target.value.replace(/\\D/g, '').slice(0,10);
+});
+</script>
+</body>
+</html> 
