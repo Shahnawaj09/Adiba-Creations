@@ -1,635 +1,166 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Adiba Creations — Filing Details Form</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marriage Biodata Filing Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --accent:#6c5ce7;
-    --muted:#6b7280;
-    --bg:#f7f7fb;
-    --card:#ffffff;
-    --danger:#e53935;
-  }
-  body{font-family:Inter,system-ui,Arial;background:var(--bg);margin:0;padding:18px;color:#111}
-  .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:18px}
-  @media(max-width:980px){.wrap{grid-template-columns:1fr}}
-  header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-  header img{width:48px;height:48px;border-radius:8px}
-  h1{margin:0;font-size:20px}
-  .card{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 8px 24px rgba(15,15,30,0.06)}
-  .section-title{font-weight:600;margin-bottom:8px}
-  .row{display:flex;gap:8px;flex-wrap:wrap}
-  .col{flex:1}
-  label{display:block;font-size:13px;margin-bottom:6px}
-  input[type="text"], input[type="date"], input[type="number"], select, textarea {
-    width:100%;padding:8px;border-radius:8px;border:1px solid #e8e8f2;background:#fff;box-sizing:border-box;
-  }
-  .small{width:110px}
-  .checkbox{transform:scale(1.05);margin-right:6px}
-  .muted{color:var(--muted);font-size:13px}
-  .btn{background:var(--accent);color:#fff;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
-  .btn.secondary{background:#fff;color:#111;border:1px solid #ececff}
-  .field-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-  .preview{position:sticky;top:18px}
-  .preview .card{min-height:200px}
-  .toggle-label{display:flex;align-items:center;gap:8px}
-  .note{font-size:13px;color:var(--muted);margin-top:6px}
-  .hr{height:1px;background:#f0f0f5;margin:12px 0}
-  .custom-list{display:flex;gap:8px;flex-wrap:wrap}
-  .chip{background:#f3f4f8;padding:6px 8px;border-radius:8px;font-size:13px}
-  .danger{color:var(--danger)}
+  body {font-family: 'Inter', sans-serif; background:#f8f9fa; margin:0; padding:20px; color:#222;}
+  .container {max-width:1000px; margin:auto; display:grid; grid-template-columns:1fr 400px; gap:20px;}
+  @media(max-width:900px){.container{grid-template-columns:1fr;}}
+  .card {background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+  h2 {color:#4b0082; margin-bottom:10px;}
+  label {font-weight:600; display:block; margin:10px 0 5px;}
+  input, select, textarea {width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;}
+  .row {display:flex; gap:10px; flex-wrap:wrap;}
+  .toggle {display:flex; align-items:center; gap:8px;}
+  .btn {background:#4b0082; color:#fff; border:none; padding:10px 16px; border-radius:6px; cursor:pointer;}
+  .preview {position:sticky; top:20px;}
+  .note {font-size:13px; color:#777;}
 </style>
 </head>
 <body>
-  <header>
-    <img src="https://raw.githubusercontent.com/ashokpant/adiba-logos/main/adiba-icon.png" alt="logo" onerror="this.style.display='none'">
-    <div>
-      <h1>Adiba Creations — Filing Details</h1>
-      <div class="muted">Fill details, enable/disable fields, preview live. Export JSON for templates.</div>
-    </div>
-  </header>
+  <h2>Marriage Biodata Filing Form</h2>
+  <div class="container">
+    <div class="card">
+      <h3>STEP 1 - Upload Photo</h3>
+      <div class="toggle"><input type="checkbox" id="enablePhoto" checked>Enable Photo Upload</div>
+      <input type="file" id="photoUpload" accept="image/*"><br>
+      
+      <h3>STEP 2 - Personal Details</h3>
+      <label>Name*</label>
+      <input type="text" id="name" placeholder="Enter full name">
+      <label>Date of Birth*</label>
+      <input type="date" id="dob">
+      <div class="toggle"><input type="checkbox" id="enablePlace" checked>Enable Place of Birth</div>
+      <input type="text" id="place" placeholder="Enter place of birth">
+      <div class="toggle"><input type="checkbox" id="enableTime" checked>Enable Birth Time</div>
+      <input type="text" id="time" placeholder="Enter time of birth">
+      <div class="toggle"><input type="checkbox" id="enableComplexion" checked>Enable Complexion</div>
+      <input type="text" id="complexion" placeholder="Fair / Wheatish / Dark">
+      <div class="toggle"><input type="checkbox" id="enableHeight" checked>Enable Height</div>
+      <input type="text" id="height" placeholder="e.g., 5'8''">
+      <label>Religion</label>
+      <select id="religion">
+        <option value="">Select</option>
+        <option>HINDUISM</option>
+        <option>ISLAM</option>
+        <option>SIKH</option>
+        <option>CHRISTIAN</option>
+        <option value="other">Other</option>
+      </select>
+      <input type="text" id="otherReligion" placeholder="Mention other religion" style="display:none;">
+      <div class="toggle"><input type="checkbox" id="enableCaste" checked>Enable Caste</div>
+      <input type="text" id="caste" placeholder="Caste">
+      <div class="toggle"><input type="checkbox" id="enableOccupation" checked>Enable Occupation</div>
+      <input type="text" id="occupation" placeholder="Occupation">
+      <div class="toggle"><input type="checkbox" id="enableIncome" checked>Enable Income</div>
+      <input type="text" id="income" placeholder="Enter income (number or words)">
+      <div class="toggle"><input type="checkbox" id="enableEducation" checked>Enable Education</div>
+      <input type="text" id="education" placeholder="Highest qualification">
+      <div class="toggle"><input type="checkbox" id="enableHobbies" checked>Enable Hobbies</div>
+      <input type="text" id="hobbies" placeholder="Hobbies (comma separated)">
 
-  <div class="wrap">
-    <!-- LEFT: Form -->
-    <div>
-      <div class="card">
-        <div class="section-title">STEP 1 — Photo</div>
-        <div class="field-row">
-          <label class="toggle-label"><input id="photoEnabled" class="checkbox" type="checkbox" checked/> Include Photo</label>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <input id="photoInput" type="file" accept="image/*" />
-          <div class="muted">Upload passport-style photo (optional)</div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="section-title">STEP 2 — Personal Details</div>
-
-        <div>
-          <label>Name (mandatory)</label>
-          <input id="fullName" type="text" placeholder="Full name (required)" required />
-          <div class="note danger" id="nameErr" style="display:none">Name is required</div>
-        </div>
-
-        <div style="margin-top:10px">
-          <label>Date of Birth (mandatory)</label>
-          <input id="dob" type="date" />
-          <div class="note danger" id="dobErr" style="display:none">Date of birth is required</div>
-        </div>
-
-        <div style="margin-top:12px">
-          <div class="row">
-            <div class="col">
-              <label>Place of Birth</label>
-              <input id="pob" type="text" placeholder="City, State" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="pobEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Birth Time</label>
-              <input id="tob" type="text" placeholder="e.g., 10:10 AM" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="tobEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Complexion</label>
-              <input id="complexion" type="text" placeholder="e.g., Fair" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="complexionEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Height</label>
-              <input id="height" type="text" placeholder="e.g., 5'8&quot;" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="heightEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div style="margin-top:10px">
-            <label>Religion</label>
-            <select id="religion">
-              <option value="">Select</option>
-              <option>HINDUISM</option>
-              <option>ISLAM</option>
-              <option>SIKH</option>
-              <option>CHRISTIAN</option>
-              <option value="other">OTHER (specify)</option>
-            </select>
-            <div id="religionOtherWrap" style="display:none;margin-top:6px">
-              <input id="religionOther" type="text" placeholder="Specify religion" />
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Caste</label>
-              <input id="caste" type="text" placeholder="Caste (optional)" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="casteEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Occupation</label>
-              <input id="occupation" type="text" placeholder="Job / Occupation" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="occupationEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Income (numbers allowed or words)</label>
-              <input id="income" type="text" placeholder="e.g., 600000 or Six Lakh" />
-              <div class="note" style="margin-top:6px">If numeric value entered, preview will show number. Words are accepted too.</div>
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="incomeEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Education</label>
-              <input id="education" type="text" placeholder="Highest education" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="educationEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div style="margin-top:10px">
-            <label>Hobbies</label>
-            <input id="hobbies" type="text" placeholder="Hobbies (comma separated)" />
-            <div style="width:130px;margin-top:6px">
-              <label class="toggle-label"><input class="checkbox" id="hobbiesEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div style="margin-top:10px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="section-title">Custom fields (Personal)</div>
-              <div class="muted">Up to 2</div>
-            </div>
-            <div class="custom-list" id="personalCustoms"></div>
-            <div style="margin-top:8px">
-              <button id="addPersonalCustom" class="btn secondary">+ Add custom field</button>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="section-title">STEP 3 — Family Details</div>
-        <div>
-          <div style="margin-bottom:8px">
-            <label>Father's Name (mandatory)</label>
-            <input id="fatherName" type="text" placeholder="Father's full name" />
-            <div class="note danger" id="fatherErr" style="display:none">Father's name is required</div>
-          </div>
-
-          <div class="row" style="margin-top:8px">
-            <div class="col">
-              <label>Father's Occupation</label>
-              <input id="fatherOcc" type="text" placeholder="Father's occupation" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="fatherOccEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div style="margin-top:10px">
-            <label>Mother's Name</label>
-            <input id="motherName" type="text" placeholder="Mother's name" />
-          </div>
-
-          <div class="row" style="margin-top:10px;align-items:center">
-            <div class="col">
-              <label>Mother's Occupation</label>
-              <input id="motherOcc" type="text" placeholder="Mother's occupation (default Housewife)" />
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="motherOccEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div style="margin-top:10px">
-            <label>Siblings</label>
-            <div class="row">
-              <div>
-                <select id="numSisters"><option value="0">0 sisters</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
-              </div>
-              <div>
-                <select id="numBrothers"><option value="0">0 brothers</option><option>1</option><option>2</option><option>3</option><option>4</option></select>
-              </div>
-              <div style="width:130px">
-                <label class="toggle-label"><input class="checkbox" id="siblingsEnabled" type="checkbox" checked/> Enable</label>
-              </div>
-            </div>
-            <div class="note" style="margin-top:8px">Preview will show e.g., "2 sisters and 1 brother" (or omit ones not present).</div>
-          </div>
-
-          <div style="margin-top:10px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="section-title">Custom fields (Family)</div>
-              <div class="muted">Up to 2</div>
-            </div>
-            <div class="custom-list" id="familyCustoms"></div>
-            <div style="margin-top:8px">
-              <button id="addFamilyCustom" class="btn secondary">+ Add custom field</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="section-title">STEP 4 — Contact Details</div>
-        <div>
-          <div class="row">
-            <div class="col">
-              <label>Contact Person</label>
-              <div style="display:flex;gap:8px">
-                <div style="width:70px;display:flex;align-items:center;justify-content:center;background:#f3f4f8;border-radius:8px">+91</div>
-                <input id="contactPerson" type="text" placeholder="Number without country code (digits only)" />
-              </div>
-            </div>
-            <div style="width:130px">
-              <label class="toggle-label"><input class="checkbox" id="contactPersonEnabled" type="checkbox" checked/> Enable</label>
-            </div>
-          </div>
-
-          <div style="margin-top:10px">
-            <label>Contact Number</label>
-            <input id="contactNumber" type="text" placeholder="Primary phone number" />
-          </div>
-
-          <div style="margin-top:10px">
-            <label>Residential Address</label>
-            <textarea id="address" rows="3" placeholder="Full address"></textarea>
-          </div>
-
-          <div style="margin-top:10px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="section-title">Custom fields (Contact)</div>
-              <div class="muted">Up to 2</div>
-            </div>
-            <div class="custom-list" id="contactCustoms"></div>
-            <div style="margin-top:8px">
-              <button id="addContactCustom" class="btn secondary">+ Add custom field</button>
-            </div>
-          </div>
-
-        </div>
-
-        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-          <button id="resetAll" class="btn secondary">Reset All</button>
-          <button id="exportBtn" class="btn">Export JSON</button>
-        </div>
-
+      <h3>STEP 3 - Family Details</h3>
+      <label>Father's Name*</label>
+      <input type="text" id="fatherName" placeholder="Father's Name">
+      <div class="toggle"><input type="checkbox" id="enableFatherOcc" checked>Enable Father's Occupation</div>
+      <input type="text" id="fatherOcc" placeholder="Father's Occupation">
+      <label>Mother's Name</label>
+      <input type="text" id="motherName" placeholder="Mother's Name">
+      <div class="toggle"><input type="checkbox" id="enableMotherOcc" checked>Enable Mother's Occupation</div>
+      <input type="text" id="motherOcc" placeholder="Mother's Occupation (default Housewife)" value="Housewife">
+      <div class="toggle"><input type="checkbox" id="enableSiblings" checked>Enable Siblings</div>
+      <div class="row">
+        <div><label>Sisters</label><select id="sisters"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+        <div><label>Brothers</label><select id="brothers"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
       </div>
+
+      <h3>STEP 4 - Contact Details</h3>
+      <label>Contact Person (Name)</label>
+      <input type="text" id="contactPerson" placeholder="Contact Name (alphabets only)">
+      <label>Contact Number (+91)</label>
+      <input type="text" id="contactNumber" placeholder="Enter number without country code" maxlength="10">
+      <label>Residential Address</label>
+      <textarea id="address" rows="3" placeholder="Full address"></textarea>
+
+      <button class="btn" id="generatePreview">Generate Preview</button>
     </div>
 
-    <!-- RIGHT: Live preview -->
-    <div class="preview">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:700">Live Preview</div>
-          <div class="muted">Shows only enabled fields</div>
-        </div>
-        <div style="margin-top:10px" id="previewArea">
-          <!-- preview content populated by JS -->
-        </div>
-        <div style="margin-top:8px" class="note">After verifying details you can export JSON or connect this data to templates.</div>
-      </div>
+    <div class="card preview">
+      <h3>Live Preview</h3>
+      <div id="preview"></div>
     </div>
-
   </div>
 
 <script>
-  // Helpers
-  const $ = id => document.getElementById(id);
-  const escapeHtml = s => (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const preview = document.getElementById('preview');
 
-  // Custom fields logic (limit 2 each)
-  function addCustom(containerId){
-    const container = $(containerId);
-    if(container.children.length >= 2) return alert('Max 2 custom fields allowed here.');
-    const idx = Date.now().toString(36).slice(-5);
-    const wrapper = document.createElement('div');
-    wrapper.style.display='flex'; wrapper.style.gap='6px'; wrapper.style.marginTop='6px';
-    wrapper.innerHTML = `<input placeholder="Label" class="custom-label" data-id="${idx}" style="padding:8px;border-radius:8px;border:1px solid #e8e8f2;flex:1"/>
-                         <input placeholder="Value" class="custom-value" data-id="${idx}" style="padding:8px;border-radius:8px;border:1px solid #e8e8f2;width:180px"/>
-                         <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" class="custom-enabled" data-id="${idx}" checked/>Enable</label>
-                         <button class="btn secondary" onclick="this.parentElement.remove()">Remove</button>`;
-    container.appendChild(wrapper);
-  }
+function siblingsText(sisters, brothers){
+  let result = [];
+  if(sisters>0) result.push(`${sisters} ${sisters==1?'sister':'sisters'}`);
+  if(brothers>0) result.push(`${brothers} ${brothers==1?'brother':'brothers'}`);
+  return result.join(' and ');
+}
 
-  $('addPersonalCustom').addEventListener('click', ()=> addCustom('personalCustoms'));
-  $('addFamilyCustom').addEventListener('click', ()=> addCustom('familyCustoms'));
-  $('addContactCustom').addEventListener('click', ()=> addCustom('contactCustoms'));
-
-  // Religion other toggle
-  $('religion').addEventListener('change', (e)=>{
-    $('religionOtherWrap').style.display = e.target.value === 'other' ? 'block' : 'none';
-    updatePreview();
-  });
-
-  // Photo handling
-  let photoDataUrl = null;
-  $('photoInput').addEventListener('change', (ev)=>{
-    const file = ev.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = e => { photoDataUrl = e.target.result; updatePreview(); };
-    reader.readAsDataURL(file);
-  });
-
-  // Reset functions
-  $('resetAll').addEventListener('click', ()=>{
-    if(!confirm('Reset all fields?')) return;
-    document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(i=>i.value='');
-    document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
-    document.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked = true);
-    photoDataUrl = null;
-    document.querySelectorAll('.custom-list').forEach(c=> c.innerHTML = '');
-    updatePreview();
-  });
-
-  // Export JSON
-  $('exportBtn').addEventListener('click', ()=>{
-    // validate mandatory
-    if(!$('fullName').value.trim()){ $('nameErr').style.display='block'; return; } else { $('nameErr').style.display='none'; }
-    if(!$('dob').value){ $('dobErr').style.display='block'; return; } else { $('dobErr').style.display='none'; }
-    if(!$('fatherName').value.trim()){ $('fatherErr').style.display='block'; return; } else { $('fatherErr').style.display='none'; }
-
-    const payload = buildPayload();
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = (payload.personal.fullName || 'biodata') + '.json'; a.click();
-    URL.revokeObjectURL(url);
-  });
-
-  // Build payload function: collects only enabled fields
-  function buildPayload(){
-    const personalCustoms = [];
-    document.querySelectorAll('#personalCustoms .custom-label').forEach(lbl=>{
-      const id = lbl.dataset.id;
-      const val = document.querySelector(#personalCustoms .custom-value[data-id="${id}"]);
-      const cb = document.querySelector(#personalCustoms .custom-enabled[data-id="${id}"]);
-      if(cb && cb.checked) personalCustoms.push({label: lbl.value, value: val.value});
-    });
-    const familyCustoms = [];
-    document.querySelectorAll('#familyCustoms .custom-label').forEach(lbl=>{
-      const id = lbl.dataset.id;
-      const val = document.querySelector(#familyCustoms .custom-value[data-id="${id}"]);
-      const cb = document.querySelector(#familyCustoms .custom-enabled[data-id="${id}"]);
-      if(cb && cb.checked) familyCustoms.push({label: lbl.value, value: val.value});
-    });
-    const contactCustoms = [];
-    document.querySelectorAll('#contactCustoms .custom-label').forEach(lbl=>{
-      const id = lbl.dataset.id;
-      const val = document.querySelector(#contactCustoms .custom-value[data-id="${id}"]);
-      const cb = document.querySelector(#contactCustoms .custom-enabled[data-id="${id}"]);
-      if(cb && cb.checked) contactCustoms.push({label: lbl.value, value: val.value});
-    });
-
-    const personal = {
-      fullName: $('fullName').value.trim(),
-      dob: $('dob').value,
-      placeOfBirth: $('pobEnabled').checked ? $('pob').value.trim() : null,
-      timeOfBirth: $('tobEnabled').checked ? $('tob').value.trim() : null,
-      complexion: $('complexionEnabled').checked ? $('complexion').value.trim() : null,
-      height: $('heightEnabled').checked ? $('height').value.trim() : null,
-      religion: $('religion').value === 'other' ? $('religionOther').value.trim() : $('religion').value,
-      caste: $('casteEnabled').checked ? $('caste').value.trim() : null,
-      occupation: $('occupationEnabled').checked ? $('occupation').value.trim() : null,
-      income: $('incomeEnabled').checked ? $('income').value.trim() : null,
-      education: $('educationEnabled').checked ? $('education').value.trim() : null,
-      hobbies: $('hobbiesEnabled').checked ? $('hobbies').value.trim() : null,
-      customs: personalCustoms
-    };
-
-    const family = {
-      fatherName: $('fatherName').value.trim(),
-      fatherOccupation: $('fatherOccEnabled').checked ? $('fatherOcc').value.trim() : null,
-      motherName: $('motherName').value.trim(),
-      motherOccupation: $('motherOccEnabled').checked ? $('motherOcc').value.trim() : null,
-      siblings: $('siblingsEnabled').checked ? { sisters: parseInt($('numSisters').value || 0), brothers: parseInt($('numBrothers').value || 0)} : null,
-      customs: familyCustoms
-    };
-
-    const contact = {
-      contactPerson: $('contactPersonEnabled').checked ? $('contactPerson').value.trim() : null,
-      contactNumber: $('contactNumber').value.trim(),
-      address: $('address').value.trim(),
-      customs: contactCustoms
-    };
-
-    return {
-      meta: { photoIncluded: $('photoEnabled').checked, photoData: $('photoEnabled').checked ? photoDataUrl : null, exportedAt: new Date().toISOString() },
-      personal, family, contact
-    };
-  }
-
-  // Preview builder
-  function generateSiblingsText(sibs){
-    if(!sibs) return '';
-    const s = [];
-    if(sibs.sisters && sibs.sisters > 0) s.push(sibs.sisters + (sibs.sisters===1 ? ' sister' : ' sisters'));
-    if(sibs.brothers && sibs.brothers > 0) s.push(sibs.brothers + (sibs.brothers===1 ? ' brother' : ' brothers'));
-    return s.join(' and ');
-  }
-
-  function numericValueFromText(s){
-    // simple heuristic: if string contains any digit return numeric part; else null
-    if(!s) return null;
-    const m = s.match(/[\d,]+/);
-    if(m) return m[0].replace(/,/g,'');
-    return null;
-  }
-
-  function updatePreview(){
-    const p = buildPayload();
-    const out = [];
-    // Photo
-    if(p.meta.photoIncluded && p.meta.photoData){
-      out.push(<div style="text-align:center;margin-bottom:8px"><img src="${p.meta.photoData}" style="width:120px;height:140px;object-fit:cover;border-radius:6px"/></div>);
-    }
-    out.push(<div style="font-weight:700;font-size:16px">${escapeHtml(p.personal.fullName || '')}</div>);
-    out.push(<div class="muted" style="margin-bottom:8px">${p.personal.religion || ''}</div>);
-    out.push('<div style="font-size:14px">');
-    out.push(<div><strong>DOB:</strong> ${p.personal.dob || ''}</div>);
-    if(p.personal.placeOfBirth) out.push(<div><strong>Place of Birth:</strong> ${escapeHtml(p.personal.placeOfBirth)}</div>);
-    if(p.personal.timeOfBirth) out.push(<div><strong>Birth Time:</strong> ${escapeHtml(p.personal.timeOfBirth)}</div>);
-    if(p.personal.complexion) out.push(<div><strong>Complexion:</strong> ${escapeHtml(p.personal.complexion)}</div>);
-    if(p.personal.height) out.push(<div><strong>Height:</strong> ${escapeHtml(p.personal.height)}</div>);
-    if(p.personal.caste) out.push(<div><strong>Caste:</strong> ${escapeHtml(p.personal.caste)}</div>);
-    if(p.personal.occupation) out.push(<div><strong>Occupation:</strong> ${escapeHtml(p.personal.occupation)}</div>);
-    if(p.personal.income){
-      const numeric = numericValueFromText(p.personal.income);
-      out.push(<div><strong>Income:</strong> ${escapeHtml(p.personal.income)}${numeric ? ' ('+numeric +')' : ''}</div>);
-    }
-    if(p.personal.education) out.push(<div><strong>Education:</strong> ${escapeHtml(p.personal.education)}</div>);
-    if(p.personal.hobbies) out.push(<div><strong>Hobbies:</strong> ${escapeHtml(p.personal.hobbies)}</div>);
-    if(p.personal.customs && p.personal.customs.length){
-      p.personal.customs.forEach(c=> out.push(<div><strong>${escapeHtml(c.label)}:</strong> ${escapeHtml(c.value)}</div>));
-    }
-
-    out.push('<div style="height:8px"></div>');
-    out.push(<div style="font-weight:700;margin-top:6px">Family</div>);
-    out.push(<div><strong>Father:</strong> ${escapeHtml(p.family.fatherName || '')}${p.family.fatherOccupation ? ' — '+escapeHtml(p.family.fatherOccupation) : ''}</div>);
-    if(p.family.motherName) out.push(<div><strong>Mother:</strong> ${escapeHtml(p.family.motherName || '')}${p.family.motherOccupation ? ' — '+escapeHtml(p.family.motherOccupation) : ''}</div>);
-    if(p.family.siblings) out.push(<div><strong>Siblings:</strong> ${generateSiblingsText(p.family.siblings)}</div>);
-    if(p.family.customs && p.family.customs.length) p.family.customs.forEach(c=> out.push(<div><strong>${escapeHtml(c.label)}:</strong> ${escapeHtml(c.value)}</div>));
-
-    out.push('<div style="height:8px"></div>');
-    out.push(<div style="font-weight:700;margin-top:6px">Contact</div>);
-    if(p.contact.contactPerson) out.push(<div><strong>Contact Person:</strong> +91 ${escapeHtml(p.contact.contactPerson)}</div>);
-    if(p.contact.contactNumber) out.push(<div><strong>Contact:</strong> ${escapeHtml(p.contact.contactNumber)}</div>);
-    if(p.contact.address) out.push(<div><strong>Address:</strong> ${escapeHtml(p.contact.address)}</div>);
-    if(p.contact.customs && p.contact.customs.length) p.contact.customs.forEach(c=> out.push(<div><strong>${escapeHtml(c.label)}:</strong> ${escapeHtml(c.value)}</div>));
-
-    $('previewArea').innerHTML = out.join('');
-  }
-
-  // Wire many inputs to update preview
-  const inputsToWatch = ['fullName','dob','pob','pobEnabled','tob','tobEnabled','complexion','complexionEnabled','height','heightEnabled','religion','religionOther','caste','casteEnabled','occupation','occupationEnabled','income','incomeEnabled','education','educationEnabled','hobbies','hobbiesEnabled','fatherName','fatherOcc','fatherOccEnabled','motherName','motherOcc','motherOccEnabled','numSisters','numBrothers','siblingsEnabled','contactPerson','contactPersonEnabled','contactNumber','address','photoEnabled'];
-  inputsToWatch.forEach(id=>{
-    const el = $(id);
-    if(!el) return;
-    el.addEventListener('input', updatePreview);
-    el.addEventListener('change', updatePreview);
-  });
-
-  // Also update on adding/removing customs
-  document.addEventListener('input', (e)=>{
-    if(e.target.matches('.custom-label') || e.target.matches('.custom-value') || e.target.matches('.custom-enabled')) updatePreview();
-  });
-
-  // initial preview
-  updatePreview();
-
-  // simple numeric-only enforcement for contact person number fields (strip non-digits)
-  $('contactPerson').addEventListener('input', e=>{
-    e.target.value = e.target.value.replace(/\D/g,'').slice(0,10);
-  });
-  $('contactNumber').addEventListener('input', e=>{
-    e.target.value = e.target.value.replace(/[^\d+\s-]/g,'').slice(0,20);
-  });
-
-  // prevent adding more than 2 customs in each container is handled by addCustom
-// Contact Person — letters and spaces only
-document.getElementById('contactPerson').addEventListener('input', e => {
-  e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+document.getElementById('religion').addEventListener('change', e=>{
+  document.getElementById('otherReligion').style.display = e.target.value==='other' ? 'block':'none';
 });
 
-// Contact Number — keep "+91" prefix, allow digits only
-const contactInput = document.getElementById('contactNumber');
-
-contactInput.addEventListener('input', e => {
-  if (!e.target.value.startsWith('+91')) {
-    e.target.value = '+91';
+document.getElementById('generatePreview').addEventListener('click', ()=>{
+  const name = document.getElementById('name').value.trim();
+  const dob = document.getElementById('dob').value;
+  if(!name || !dob){
+    alert('Name and Date of Birth are mandatory!');
+    return;
   }
-  const afterPrefix = e.target.value.slice(3).replace(/\D/g, '').slice(0, 10);
-  e.target.value = '+91' + afterPrefix;
-});
+  const data = {
+    photoEnabled: document.getElementById('enablePhoto').checked,
+    name,
+    dob,
+    place: document.getElementById('enablePlace').checked ? document.getElementById('place').value.trim():null,
+    time: document.getElementById('enableTime').checked ? document.getElementById('time').value.trim():null,
+    complexion: document.getElementById('enableComplexion').checked ? document.getElementById('complexion').value.trim():null,
+    height: document.getElementById('enableHeight').checked ? document.getElementById('height').value.trim():null,
+    religion: document.getElementById('religion').value==='other' ? document.getElementById('otherReligion').value.trim():document.getElementById('religion').value,
+    caste: document.getElementById('enableCaste').checked ? document.getElementById('caste').value.trim():null,
+    occupation: document.getElementById('enableOccupation').checked ? document.getElementById('occupation').value.trim():null,
+    income: document.getElementById('enableIncome').checked ? document.getElementById('income').value.trim():null,
+    education: document.getElementById('enableEducation').checked ? document.getElementById('education').value.trim():null,
+    hobbies: document.getElementById('enableHobbies').checked ? document.getElementById('hobbies').value.trim():null,
+    fatherName: document.getElementById('fatherName').value.trim(),
+    fatherOcc: document.getElementById('enableFatherOcc').checked ? document.getElementById('fatherOcc').value.trim():null,
+    motherName: document.getElementById('motherName').value.trim(),
+    motherOcc: document.getElementById('enableMotherOcc').checked ? document.getElementById('motherOcc').value.trim():null,
+    siblings: document.getElementById('enableSiblings').checked ? siblingsText(document.getElementById('sisters').value, document.getElementById('brothers').value):null,
+    contactPerson: document.getElementById('contactPerson').value.trim(),
+    contactNumber: document.getElementById('contactNumber').value.trim(),
+    address: document.getElementById('address').value.trim()
+  };
 
-contactInput.addEventListener('keydown', e => {
-  // block deleting "+91"
-  if (e.target.selectionStart <= 3 && (e.key === 'Backspace' || e.key === 'Delete')) {
-    e.preventDefault();
-  }
-});
- <div class="section-title">STEP 4 — Contact Details</div>
-<div>
-  <div class="row">
-    <div class="col">
-      <label>Contact Name</label>
-      <input id="contactName" type="text" placeholder="Full name (alphabets only)" />
-    </div>
-    <div style="width:130px">
-      <label class="toggle-label">
-        <input class="checkbox" id="contactNameEnabled" type="checkbox" checked/> Enable
-      </label>
-    </div>
-  </div>
+  let html = `<p><strong>Name:</strong> ${data.name}</p><p><strong>DOB:</strong> ${data.dob}</p>`;
+  if(data.place) html+=`<p><strong>Place of Birth:</strong> ${data.place}</p>`;
+  if(data.time) html+=`<p><strong>Birth Time:</strong> ${data.time}</p>`;
+  if(data.complexion) html+=`<p><strong>Complexion:</strong> ${data.complexion}</p>`;
+  if(data.height) html+=`<p><strong>Height:</strong> ${data.height}</p>`;
+  if(data.religion) html+=`<p><strong>Religion:</strong> ${data.religion}</p>`;
+  if(data.caste) html+=`<p><strong>Caste:</strong> ${data.caste}</p>`;
+  if(data.occupation) html+=`<p><strong>Occupation:</strong> ${data.occupation}</p>`;
+  if(data.income) html+=`<p><strong>Income:</strong> ${data.income}</p>`;
+  if(data.education) html+=`<p><strong>Education:</strong> ${data.education}</p>`;
+  if(data.hobbies) html+=`<p><strong>Hobbies:</strong> ${data.hobbies}</p>`;
+  html+=`<h4>Family Details</h4>`;
+  html+=`<p><strong>Father:</strong> ${data.fatherName}${data.fatherOcc? ' - '+data.fatherOcc:''}</p>`;
+  if(data.motherName) html+=`<p><strong>Mother:</strong> ${data.motherName}${data.motherOcc? ' - '+data.motherOcc:''}</p>`;
+  if(data.siblings) html+=`<p><strong>Siblings:</strong> ${data.siblings}</p>`;
+  html+=`<h4>Contact</h4>`;
+  if(data.contactPerson) html+=`<p><strong>Contact Person:</strong> ${data.contactPerson}</p>`;
+  if(data.contactNumber) html+=`<p><strong>Contact Number:</strong> +91 ${data.contactNumber}</p>`;
+  if(data.address) html+=`<p><strong>Address:</strong> ${data.address}</p>`;
 
-  <div class="row" style="margin-top:10px">
-    <div class="col">
-      <label>Contact Number</label>
-      <div style="display:flex;gap:8px;align-items:center">
-        <div style="width:70px;display:flex;align-items:center;justify-content:center;background:#f3f4f8;border-radius:8px">+91</div>
-        <input id="contactNumber" type="text" placeholder="Enter 10-digit number only" maxlength="10" />
-      </div>
-    </div>
-    <div style="width:130px">
-      <label class="toggle-label">
-        <input class="checkbox" id="contactNumberEnabled" type="checkbox" checked/> Enable
-      </label>
-    </div>
-  </div>
-
-  <div style="margin-top:10px">
-    <label>Residential Address</label>
-    <textarea id="address" rows="3" placeholder="Full address"></textarea>
-  </div>
-
-  <div style="margin-top:10px">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="section-title">Custom fields (Contact)</div>
-      <div class="muted">Up to 2</div>
-    </div>
-    <div class="custom-list" id="contactCustoms"></div>
-    <div style="margin-top:8px">
-      <button id="addContactCustom" class="btn secondary">+ Add custom field</button>
-    </div>
-  </div>
-</div>
- const contact = {
-  contactName: $('contactNameEnabled').checked ? $('contactName').value.trim() : null,
-  contactNumber: $('contactNumberEnabled').checked ? $('contactNumber').value.trim() : null,
-  address: $('address').value.trim(),
-  customs: contactCustoms
-};  
-  
-</out.push('<div style="height:8px"></div>');
-out.push(`<div style="font-weight:700;margin-top:6px">Contact</div>`);
-if(p.contact.contactName) out.push(`<div><strong>Contact Name:</strong> ${escapeHtml(p.contact.contactName)}</div>`);
-if(p.contact.contactNumber) out.push(`<div><strong>Contact Number:</strong> +91 ${escapeHtml(p.contact.contactNumber)}</div>`);
-if(p.contact.address) out.push(`<div><strong>Address:</strong> ${escapeHtml(p.contact.address)}</div>`);
-if(p.contact.customs && p.contact.customs.length)
-  p.contact.customs.forEach(c=> out.push(`<div><strong>${escapeHtml(c.label)}:</strong> ${escapeHtml(c.value)}</div>`));script>
-</body>
-</html>
-  // Allow only alphabets for contact name
-$('contactName').addEventListener('input', e=>{
-  e.target.value = e.target.value.replace(/[^a-zA-Z\\s]/g, '');
-});
-// Digits only for contact number
-$('contactNumber').addEventListener('input', e=>{
-  e.target.value = e.target.value.replace(/\\D/g, '').slice(0,10);
+  preview.innerHTML = html;
 });
 </script>
 </body>
-</html> 
+</html>
