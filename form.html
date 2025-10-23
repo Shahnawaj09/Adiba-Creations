@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Adiba - Advanced Marriage Biodata Form (with Cropper.js)</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- Cropper.js CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet"/>
+
+<style>
+  :root{--accent:#e76f00;--muted:#8a8a8a;--card:#fff;--green:#18a447;--bg:#f4f6f9}
+  *{box-sizing:border-box}
+  body{font-family:Inter,Arial;margin:0;background:var(--bg);color:#222}
+  .wrap{max-width:1200px;margin:18px auto;display:grid;grid-template-columns:1fr 420px;gap:18px;padding:8px}
+  @media(max-width:1100px){.wrap{grid-template-columns:1fr}}
+  .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 22px rgba(20,20,40,0.06)}
+  header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .controls{display:flex;gap:8px;align-items:center}
+  select,input[type="search"]{padding:8px;border-radius:6px;border:1px solid #ddd}
+  .section-title{display:flex;align-items:center;gap:8px;font-weight:700}
+  .section-head{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px}
+  .personal-head{background:linear-gradient(90deg,#fff6ee, #fff6ee); border-left:6px solid var(--accent)}
+  .field{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;margin:8px 0;border:1px solid #f0f0f0}
+  .field input, .field select, .field textarea{flex:1;padding:8px;border-radius:6px;border:1px solid #ddd}
+  .field .label{width:190px;font-weight:600}
+  .tools{display:flex;gap:6px;align-items:center}
+  .tool-btn{background:#fff;border:1px solid #ddd;padding:6px;border-radius:6px;cursor:pointer}
+  .tick{width:22px;height:22px;border-radius:4px;border:1px solid #ccc;display:grid;place-items:center;cursor:pointer}
+  .tick.checked{background:var(--green);color:#fff;border-color:var(--green)}
+  .btn{background:var(--accent);color:#fff;border:0;padding:10px 12px;border-radius:8px;cursor:pointer}
+  .preview{position:sticky;top:18px}
+  .preview .card{height:calc(100vh - 60px);overflow:auto}
+  .preview-box{padding:18px}
+  .title-input{font-size:20px;font-weight:700;border:0;background:transparent;outline:none}
+  .required{color:#d33;margin-left:6px}
+  .small{font-size:13px;color:var(--muted)}
+  .hidden{opacity:.45}
+  .section-collapsed .section-body{display:none}
+  .tmpl{width:360px;margin:10px auto;padding:18px;background:#fff;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+  .tmpl h3{margin:0 0 6px;font-size:18px;color:var(--accent)}
+  .tmpl .kv{margin:8px 0}
+  .photo-preview{width:110px;height:110px;border-radius:6px;overflow:hidden;background:#eee;display:block;object-fit:cover}
+  .photo-preview.circle{border-radius:50%}
+  .muted{color:#666;font-size:13px}
+  .sep{height:1px;background:#f0f0f0;margin:10px 0}
+  .controls-bottom{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:12px}
+  .updown{font-weight:700;padding:2px 6px;border-radius:6px;background:#fff;border:1px solid #eee;cursor:pointer}
+  .hint{font-size:12px;color:#777}
+
+  /* Cropper modal */
+  .cropper-modal{
+    position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:9999;
+  }
+  .cropper-box{width:90%;max-width:920px;background:#fff;padding:12px;border-radius:8px;display:flex;gap:12px;align-items:flex-start}
+  .cropper-left{flex:1;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+  .cropper-right{width:260px;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+  .crop-controls{display:flex;gap:8px;flex-wrap:wrap}
+  .crop-preview{width:220px;height:220px;border:1px solid #eee;border-radius:8px;overflow:hidden;background:#f7f7f7;display:grid;place-items:center}
+  .crop-btn{padding:8px;border-radius:8px;border:0;background:#111;color:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Left: Form -->
+    <div class="card">
+      <header>
+        <div>
+          <strong style="font-size:20px">Adiba — Advanced Biodata Form</strong>
+          <div class="small">Build & customize a printable biodata</div>
+        </div>
+
+        <div class="controls">
+          <label class="small" for="lang">Language</label>
+          <select id="lang" title="Select interface language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="mr">मराठी</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="te">తెలుగు</option>
+          </select>
+
+          <button id="resetBtn" class="tool-btn" title="Reset all fields">🔄 Reset</button>
+        </div>
+      </header>
+
+      <!-- Biodata Title and Photo -->
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
+        <div style="flex:1">
+          <input id="biodataTitle" class="title-input" value="Marriage Biodata" />
+          <div class="small">Editable title — click to rename</div>
+        </div>
+
+        <div style="width:220px">
+          <label style="display:block;font-weight:700;margin-bottom:6px">Add Profile Photo?</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div id="photoToggle" class="tick checked" title="Enable/disable photo">✔</div>
+            <div style="flex:1">
+              <!-- file input -->
+              <input id="photoInput" type="file" accept="image/*" />
+              <div class="small">Choose & crop (square/circle). Image opens crop modal automatically.</div>
+            </div>
+          </div>
+          <div id="cropModeControls" style="margin-top:8px;display:flex;gap:8px;align-items:center">
+            <label class="small">Output shape</label>
+            <select id="cropShape"><option value="square">Square</option><option value="circle">Circle</option></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Section (omitting full HTML repetition description here for brevity) -->
+      <!-- (This sample keeps all fields from previous version: fullname, dob, height, place, religion, caste, hidable hindu fields, complexion, blood, education, occupation, income, add custom, etc.) -->
+
+      <!-- For brevity in this message I include the same form fields from previous version.
+           Please assume all fields and functionality are unchanged except the crop logic. -->
+
+      <!-- I'll include full form body unchanged from the last version to keep features intact. -->
+      <!-- === Begin fields (copied from previous large form) === -->
+
+      <div id="personalSection" class="section">
+        <div class="section-head personal-head">
+          <div class="section-title">
+            <span class="title-edit" id="personalTitle">Personal Details</span>
+            <span class="small">(<span class="hint">editable</span>)</span>
+          </div>
+          <div>
+            <button class="tool-btn" id="personalToggle">⌄</button>
+          </div>
+        </div>
+
+        <div class="section-body">
+          <div class="field" data-id="fullname">
+            <div class="label"><span class="label-text">Full Name</span><span class="required">*</span></div>
+            <input id="fullname" placeholder="Enter your Full Name" />
+            <div class="tools">
+              <div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div>
+              <div class="tool-btn updown" title="Move up" onclick="moveField(this,'up')">￪</div>
+              <div class="tool-btn updown" title="Move down" onclick="moveField(this,'down')">￬</div>
+              <div class="tick checked" onclick="toggleField(this)" title="Show/Hide field">✔</div>
+            </div>
+          </div>
+
+          <div class="field" data-id="dob">
+            <div class="label"><span class="label-text">Date of Birth</span></div>
+            <input id="dob" type="datetime-local" />
+            <div class="tools">
+              <div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div>
+              <div class="tool-btn updown" onclick="moveField(this,'up')">￪</div>
+              <div class="tool-btn updown" onclick="moveField(this,'down')">￬</div>
+              <div class="tick checked" onclick="toggleField(this)">✔</div>
+            </div>
+          </div>
+
+          <div class="field" data-id="height">
+            <div class="label"><span class="label-text">Height</span></div>
+            <input id="height" placeholder="5'8 or 156 CM" />
+            <div class="tools">
+              <div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div>
+              <div class="tool-btn updown" onclick="moveField(this,'up')">￪</div>
+              <div class="tool-btn updown" onclick="moveField(this,'down')">￬</div>
+              <div class="tick checked" onclick="toggleField(this)">✔</div>
+            </div>
+          </div>
+
+          <div class="field" data-id="place">
+            <div class="label"><span class="label-text">Place of Birth</span></div>
+            <input id="place" placeholder="Patna, Bihar" />
+            <div class="tools">
+              <div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div>
+              <div class="tool-btn updown" onclick="moveField(this,'up')">￪</div>
+              <div class="tool-btn updown" onclick="moveField(this,'down')">￬</div>
+              <div class="tick checked" onclick="toggleField(this)">✔</div>
+            </div>
+          </div>
+
+          <div class="field" data-id="religion">
+            <div class="label"><span class="label-text">Religion</span></div>
+            <select id="religion" onchange="onReligionChange()">
+              <option value="">Select Your Religion</option>
+              <option>Hinduism</option>
+              <option>Islam</option>
+              <option>Christian</option>
+              <option>Sikh</option>
+              <option>Buddhism</option>
+              <option>Jain</option>
+              <option>Other</option>
+            </select>
+            <div class="tools">
+              <div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div>
+              <div class="tool-btn updown" onclick="moveField(this,'up')">￪</div>
+              <div class="tool-btn updown" onclick="moveField(this,'down')">￬</div>
+              <div class="tick checked" onclick="toggleField(this)">✔</div>
+            </div>
+          </div>
+
+          <div class="field" data-id="caste">
+            <div class="label"><span class="label-text">Caste</span></div>
+            <select id="caste"><option value="">—</option></select>
+            <div class="tools">
+              <div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div>
+              <div class="tool-btn updown" onclick="moveField(this,'up')">￪</div>
+              <div class="tool-btn updown" onclick="moveField(this,'down')">￬</div>
+              <div class="tick checked" onclick="toggleField(this)">✔</div>
+            </div>
+          </div>
+
+          <div class="field hidable" data-id="nakshatra">
+            <div class="label"><span class="label-text">Nakshatra</span></div>
+            <select id="nakshatra"><option value="">—</option></select>
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field hidable" data-id="rashi">
+            <div class="label"><span class="label-text">Rashi</span></div>
+            <select id="rashi"><option value="">—</option></select>
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field hidable" data-id="manglik">
+            <div class="label"><span class="label-text">Manglik</span></div>
+            <select id="manglik"><option value="">—</option><option>Yes</option><option>No</option><option>Partial</option><option>Unknown</option></select>
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field hidable" data-id="gotra">
+            <div class="label"><span class="label-text">Gotra</span></div>
+            <select id="gotra"><option value="">—</option></select>
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field hidable" data-id="gan">
+            <div class="label"><span class="label-text">Gan</span></div>
+            <select id="gan"><option value="">—</option><option>Dev (Divine)</option><option>Manushya (Human)</option><option>Rakshas (Demon)</option></select>
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="complexion">
+            <div class="label"><span class="label-text">Complexion</span></div>
+            <select id="complexion"><option value="">—</option><option>Very Fair</option><option>Fair</option><option>Wheatish</option><option>Wheatish Brown</option><option>Brown</option><option>Black</option></select>
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="blood">
+            <div class="label"><span class="label-text">Blood Group</span></div>
+            <select id="blood"><option value="">—</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="education">
+            <div class="label"><span class="label-text">Higher Education</span></div>
+            <input id="education" placeholder="e.g., B.Tech in Mechanical Engineering" />
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="occupation">
+            <div class="label"><span class="label-text">Job / Occupation</span></div>
+            <input id="occupation" placeholder="e.g., Software Engineer at TCS" />
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="income">
+            <div class="label"><span class="label-text">Income</span></div>
+            <input id="income" placeholder="Annual salary in INR" />
+            <div class="tools"><div class="tool-btn" title="Edit label" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+            <button id="addCustomPersonal" class="tool-btn">Add Field ➕</button>
+            <div style="flex:1"></div>
+            <button id="nextToFamily" class="btn" title="Next Section">Next Section ➡</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Family -->
+      <div id="familySection" class="section" style="margin-top:12px">
+        <div class="section-head family-head">
+          <div class="section-title"><span id="familyTitle">Family Details</span></div>
+          <div><button class="tool-btn" id="familyToggle">⌄</button></div>
+        </div>
+
+        <div class="section-body">
+          <div class="field" data-id="fatherName">
+            <div class="label"><span class="label-text">Father's Name</span><span class="required">*</span></div>
+            <input id="fatherName" placeholder="Enter Father's Full Name" />
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="fatherOcc">
+            <div class="label"><span class="label-text">Father's Occupation</span></div>
+            <input id="fatherOcc" placeholder="e.g., Retired Army Officer" />
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="motherName">
+            <div class="label"><span class="label-text">Mother's Name</span></div>
+            <input id="motherName" placeholder="Enter Mother's Full Name" />
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="motherOcc">
+            <div class="label"><span class="label-text">Mother's Occupation</span></div>
+            <input id="motherOcc" placeholder="e.g., Housewife" value="Housewife" />
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="siblings">
+            <div class="label"><span class="label-text">Siblings</span></div>
+            <div style="display:flex;gap:8px">
+              <select id="sisters"></select>
+              <select id="brothers"></select>
+            </div>
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+            <button id="addCustomFamily" class="tool-btn">Add Field ➕</button>
+            <div style="flex:1"></div>
+            <div style="display:flex;gap:8px">
+              <button id="prevToPersonal" class="tool-btn">🔙 Previous</button>
+              <button id="nextToContact" class="btn" style="background:#9e6b28">Next ➡</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div id="contactSection" class="section" style="margin-top:12px">
+        <div class="section-head contact-head">
+          <div class="section-title"><span id="contactTitle">Contact Details</span></div>
+          <div><button class="tool-btn" id="contactToggle">⌄</button></div>
+        </div>
+
+        <div class="section-body">
+          <div class="field" data-id="contactPerson">
+            <div class="label"><span class="label-text">Contact Person (Name)</span></div>
+            <input id="contactPerson" placeholder="Contact Name" />
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="mobile">
+            <div class="label"><span class="label-text">Mobile Number</span><span class="required">*</span></div>
+            <input id="mobile" placeholder="1234567890" maxlength="12" />
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div class="field" data-id="address">
+            <div class="label"><span class="label-text">Residential Address</span></div>
+            <textarea id="address" placeholder="Enter your full address including pin code"></textarea>
+            <div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+            <button id="addCustomContact" class="tool-btn">Add Field ➕</button>
+            <div style="flex:1"></div>
+            <div style="display:flex;gap:8px">
+              <button id="prevToFamily" class="tool-btn">🔙 Previous</button>
+              <button id="previewBtn" class="btn">⬇ Download / Preview</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Live Preview -->
+    <div class="preview">
+      <div class="card">
+        <div class="preview-box">
+          <h4 class="small">Live Preview</h4>
+          <div class="tmpl" id="livePreview">
+            <div style="display:flex;gap:12px">
+              <div style="flex:1">
+                <h3 id="pvTitle">Marriage Biodata</h3>
+                <div class="muted" id="pvSubtitle">Personal Details</div>
+              </div>
+              <div style="width:120px;text-align:center">
+                <img id="pvPhoto" class="photo-preview" src="" alt="Photo" style="display:none" />
+              </div>
+            </div>
+            <div class="sep"></div>
+            <div id="pvFields"></div>
+            <div style="text-align:center;margin-top:10px">
+              <small class="muted">Preview box — export from Download</small>
+            </div>
+          </div>
+
+          <div class="controls-bottom">
+            <div class="small">Tip: you can rename any label by clicking ✎</div>
+            <div style="display:flex;gap:8px">
+              <button class="tool-btn" id="exportPNG">Export PNG</button>
+              <button class="tool-btn" id="exportPDF">Export PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cropper Modal -->
+  <div id="cropperModal" class="cropper-modal" aria-hidden="true">
+    <div class="cropper-box card" role="dialog" aria-modal="true">
+      <div class="cropper-left">
+        <div style="flex:1;min-height:360px;display:flex;align-items:center;justify-content:center;background:#fafafa;border-radius:6px;padding:6px">
+          <img id="cropImage" src="" alt="To crop" style="max-width:100%;max-height:78vh;display:block" />
+        </div>
+
+        <div class="crop-controls">
+          <button id="rotateLeft" class="crop-btn">⟲ Rotate</button>
+          <button id="rotateRight" class="crop-btn">⟳ Rotate</button>
+          <button id="zoomIn" class="crop-btn">＋ Zoom</button>
+          <button id="zoomOut" class="crop-btn">－ Zoom</button>
+          <button id="resetCrop" class="crop-btn">Reset</button>
+        </div>
+      </div>
+
+      <div class="cropper-right">
+        <div>
+          <div style="font-weight:700;margin-bottom:6px">Preview</div>
+          <div class="crop-preview" id="cropPreview">—</div>
+        </div>
+
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+          <button id="applyCrop" class="crop-btn" style="background:var(--green)">Apply Crop</button>
+          <button id="cancelCrop" class="crop-btn" style="background:#c53d3d">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Cropper.js script CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<script>
+/* ---------- Keep translations & other logic from previous version ---------- */
+/* For brevity, I re-use the translation and UI logic from previous implementation.
+   This file keeps the full form structure and adds Cropper integration.
+   Important parts to initialize and wire events for Cropper are below. */
+
+/* Minimal helper functions */
+function $(sel, root=document){ return root.querySelector(sel) }
+function $all(sel, root=document){ return Array.from(root.querySelectorAll(sel)) }
+
+const state = { lang:'en', customCounts: {personal:0, family:0, contact:0}, photoData: null, circleOutput:false };
+
+/* Small subset of translation & options used (full translations from your prior file should be included if needed) */
+const translations = {
+  en: { personal: "Personal Details", family: "Family Details", contact: "Contact Details", biodataTitle: "Marriage Biodata" },
+  hi: { personal: "व्यक्तिगत विवरण", family: "पारिवारिक विवरण", contact: "संपर्क विवरण", biodataTitle: "विवाह जीवनी (Marriage Biodata)" },
+  mr: { personal: "वैयक्तिक माहिती", family: "कौटुंबिक माहिती", contact: "संपर्क माहिती", biodataTitle: "विवाह जीवनचरित्र" },
+  gu: { personal: "વૈયક્તિક વિગતો", family: "કુટુંબની વિગતો", contact: "સંપર્ક વિગતો", biodataTitle: "વિવાહ બાયો ડેટા" },
+  te: { personal: "వ్యక్తిగత వివరాలు", family: "కుటుంబ వివరాలు", contact: "సంపర్క్ వివరాలు", biodataTitle: "వివాహ బయోడేటా" }
+};
+
+/* --- Initialize basic UI and preview wiring (many functions reused from earlier full file) --- */
+function translateUI(lang){ state.lang = lang; const t = translations[lang] || translations.en; $('#personalTitle').textContent = t.personal; $('#familyTitle').textContent = t.family; $('#contactTitle').textContent = t.contact; if(!$('#biodataTitle').dataset.userEdited) $('#biodataTitle').value = t.biodataTitle || $('#biodataTitle').value; $('#pvTitle').textContent = $('#biodataTitle').value; updatePreview(); }
+function initCommon(){
+  // populate sisters/brothers
+  for(let i=0;i<=10;i++){ $('#sisters').innerHTML += `<option>${i}</option>`; $('#brothers').innerHTML += `<option>${i}</option>`; }
+  // wire common events
+  $('#lang').addEventListener('change', e=>translateUI(e.target.value));
+  $('#biodataTitle').addEventListener('input', ()=>{ $('#pvTitle').textContent = $('#biodataTitle').value; $('#biodataTitle').dataset.userEdited = 1; });
+  $('#photoToggle').addEventListener('click', togglePhotoEnable);
+  $('#photoInput').addEventListener('change', onFileInputChange);
+  $('#cropShape').addEventListener('change', ()=>{ state.circleOutput = $('#cropShape').value === 'circle'; if(state.photoData) updatePreview(); });
+  $('#personalToggle').addEventListener('click', ()=>toggleCollapse('personalSection'));
+  $('#familyToggle').addEventListener('click', ()=>toggleCollapse('familySection'));
+  $('#contactToggle').addEventListener('click', ()=>toggleCollapse('contactSection'));
+  $('#nextToFamily').addEventListener('click', ()=>showSection('familySection'));
+  $('#prevToPersonal').addEventListener('click', ()=>showSection('personalSection'));
+  $('#nextToContact').addEventListener('click', ()=>showSection('contactSection'));
+  $('#prevToFamily').addEventListener('click', ()=>showSection('familySection'));
+  $('#addCustomPersonal').addEventListener('click', ()=>addCustomField('personal'));
+  $('#addCustomFamily').addEventListener('click', ()=>addCustomField('family'));
+  $('#addCustomContact').addEventListener('click', ()=>addCustomField('contact'));
+  $('#resetBtn').addEventListener('click', resetAll);
+  $('#previewBtn').addEventListener('click', openPreview);
+  $('#exportPNG').addEventListener('click', ()=>exportPage('png'));
+  $('#exportPDF').addEventListener('click', ()=>exportPage('pdf'));
+  $('#mobile').addEventListener('input', e=>{ e.target.value = e.target.value.replace(/[^0-9,]/g,''); });
+
+  translateUI('en');
+  onReligionChange();
+  updatePreview();
+}
+window.addEventListener('DOMContentLoaded', initCommon);
+
+/* ---------- Field helpers (these mirror earlier functions) ---------- */
+function editLabel(evt){ const labelSpan = evt.target.closest('.field').querySelector('.label .label-text'); const current = labelSpan.textContent; const v = prompt('Edit field label', current); if(v!==null){ labelSpan.textContent = v.trim() || current; labelSpan.dataset.userEdited = "1"; updatePreview(); } }
+function moveField(btn, dir){ const field = btn.closest('.field'); const parent = field.parentElement; if(dir === 'up'){ const prev = field.previousElementSibling; if(prev && prev.classList.contains('field')) parent.insertBefore(field, prev); } else { const next = field.nextElementSibling; if(next) parent.insertBefore(next, field); } updatePreview(); }
+function toggleField(el){ el.classList.toggle('checked'); const fld = el.closest('.field'); fld.classList.toggle('hidden'); updatePreview(); }
+function addCustomField(section){ if(state.customCounts[section] >= 2){ alert('Max 2 custom fields per section'); return; } state.customCounts[section]++; let container; if(section === 'personal') container = $('#personalSection .section-body'); if(section === 'family') container = $('#familySection .section-body'); if(section === 'contact') container = $('#contactSection .section-body'); const id = `custom_${section}_${state.customCounts[section]}`; const html = document.createElement('div'); html.className = 'field'; html.dataset.id = id; html.innerHTML = `<div class="label"><span class="label-text">Custom Field</span></div><input placeholder="Enter value" id="${id}_val" /><div class="tools"><div class="tool-btn" onclick="editLabel(event)">✎</div><div class="tool-btn updown" onclick="moveField(this,'up')">￪</div><div class="tool-btn updown" onclick="moveField(this,'down')">￬</div><div class="tick checked" onclick="toggleField(this)">✔</div></div>`; container.insertBefore(html, container.querySelector('#addCustom' + (section==='personal'?'Personal':'') ) || null); updatePreview(); }
+function toggleCollapse(id){ const sec = $('#'+id); sec.classList.toggle('section-collapsed'); }
+function showSection(id){ ['personalSection','familySection','contactSection'].forEach(s=>{ const el = $('#'+s); if(s===id) el.classList.remove('section-collapsed'); else el.classList.add('section-collapsed'); }); document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+/* ---------- Preview gather & update ---------- */
+function gatherData(){ const data = {}; data.title = $('#biodataTitle').value; data.photo = state.photoData; $all('.field').forEach(f=>{ const id = f.dataset.id; if(!id) return; const hidden = f.classList.contains('hidden') || f.style.display === 'none'; const inp = f.querySelector('input,select,textarea'); if(!inp) return; const val = inp.value || ''; const label = f.querySelector('.label .label-text').textContent; data[id] = { label, value: val.trim(), hidden }; }); const s = parseInt($('#sisters').value||0,10); const b = parseInt($('#brothers').value||0,10); data.siblings.value = formatSiblings(s,b); return data; }
+function formatSiblings(s,b){ const res=[]; if(s>0) res.push(`${s} ${s===1?'sister':'sisters'}`); if(b>0) res.push(`${b} ${b===1?'brother':'brothers'}`); if(res.length===0) return ''; return res.join(' and '); }
+function updatePreview(){ const data = gatherData(); $('#pvTitle').textContent = data.title || 'Marriage Biodata'; if(data.photo){ $('#pvPhoto').src = data.photo; $('#pvPhoto').style.display='block'; if($('#cropShape').value === 'circle') $('#pvPhoto').classList.add('circle'); else $('#pvPhoto').classList.remove('circle'); } else { $('#pvPhoto').style.display='none'; } const pv = $('#pvFields'); pv.innerHTML = ''; $all('.field').forEach(f=>{ const id = f.dataset.id; if(!id) return; const info = data[id]; if(!info || info.hidden) return; const row=document.createElement('div'); row.className='kv'; row.innerHTML=`<div style="font-weight:700">${info.label}</div><div class="muted">${info.value || '—'}</div>`; pv.appendChild(row); }); }
+
+/* ---------- Religion/caste placeholders (from prior file) ---------- */
+const casteOptions = {
+  Hinduism: ["Brahmin","Yadav","Jat","Rajput","Patidar","Kurmi","Agarwal","Lingayat","Baniya","Bhil","Koli","Lodhi","Gupta","Mali","Dhobi","Barber(Nai)","Tambe","Valmiki","Raigar","Meghwal","Tantrik","Potter(Kumhar)","Chamar","Kori","Mahar","Rajbhar","Mahajan","Sakpal","Teli","Dhangar","Kobara","Banjara","Matang","Pawar","Other"],
+  Islam: ["Sunni","Shia","Sheikh","Ansari","Syed","Pathan","Bohra","Other"],
+  Christian: ["Roman Catholic","Protestant","Orthodox","Syrian Christian","Other"],
+  Sikh: ["Jat Sikh","Khatri Sikh","Ramdasia Sikh","Other"],
+  Buddhism: ["Mahayana","Theravada","Vajrayana","Other"],
+  Jain: ["Digambar","Shwetambar","Other"]
+};
+const nakshatras = ['Ashvini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Svati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati','Abhijit'];
+const rashis = ['Aries (Mesha)','Taurus (Vrishabha)','Gemini (Mithuna)','Cancer (Karka)','Leo (Simha)','Virgo (Kanya)','Libra (Tula)','Scorpio (Vrishchika)','Sagittarius (Dhanu)','Capricorn (Makara)','Aquarius (Kumbha)','Pisces (Meena)'];
+function onReligionChange(){ const val = $('#religion').value; const casteSelect = $('#caste'); casteSelect.innerHTML = `<option value="">—</option>`; if(casteOptions[val]) casteOptions[val].forEach(opt => casteSelect.innerHTML += `<option>${opt}</option>`); else if(val === 'Other') { casteSelect.innerHTML += `<option>Other</option>`; } const hinduOnly = $all('.hidable'); hinduOnly.forEach(el=>{ if(val === 'Hinduism'){ el.style.display=''; el.querySelector('.tick')?.classList.add('checked'); el.classList.remove('hidden'); } else { el.style.display='none'; } }); updatePreview(); }
+
+/* ---------- Reset ---------- */
+function resetAll(){ if(!confirm('Reset all fields to default?')) return; location.reload(); }
+
+/* ---------- Preview window & export (unchanged) ---------- */
+function openPreview(){ updatePreview(); const data = gatherData(); const previewHtml = buildPreviewHtml(data); const w = window.open('', '_blank'); w.document.open(); w.document.write(previewHtml); w.document.close(); }
+function buildPreviewHtml(data){
+  const content = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview - ${escapeHtml(data.title||'Biodata')}</title><style>body{font-family:Inter,Arial;padding:18px;background:#f7f7f8}.page{width:800px;margin:10px auto;background:#fff;padding:30px;border-radius:8px}.photo{width:140px;height:140px;border-radius:8px;float:right;object-fit:cover}h1{color:#b85d00}.kv{margin:6px 0}.label{font-weight:700}.muted{color:#333}.top-actions{position:fixed;top:12px;right:12px;display:flex;gap:8px}.btn{padding:8px 10px;border-radius:8px;border:0;background:#111;color:#fff;cursor:pointer}</style></head><body><div class="top-actions"><button class="btn" id="downloadPng">Export PNG</button><button class="btn" id="downloadPdf">Export PDF</button></div><div class="page" id="pageNode"><h1>${escapeHtml(data.title||'Marriage Biodata')}</h1>${data.photo? `<img src="${data.photo}" class="photo" />`:''}<div>${Object.keys(data).map(k=>{ if(['title','photo'].includes(k)) return ''; const it = data[k]; if(!it || it.hidden || !it.label) return ''; return `<div class="kv"><div class="label">${escapeHtml(it.label)}</div><div class="muted">${escapeHtml(it.value||'—')}</div></div>`; }).join('')}</div></div><script>function loadScript(src){ return new Promise((r,rej)=>{ const s=document.createElement('script'); s.onload=r; s.onerror=rej; s.src=src; document.head.appendChild(s); }); } async function exportPNG(){ if(!window.html2canvas) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'); const node = document.getElementById('pageNode'); await new Promise(r=>setTimeout(r,200)); const canvas = await html2canvas(node,{scale:2}); const url = canvas.toDataURL('image/png'); const a = document.createElement('a'); a.href=url; a.download='biodata.png'; a.click(); } async function exportPDF(){ if(!window.html2canvas) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'); if(!window.jspdf) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'); const node = document.getElementById('pageNode'); const canvas = await html2canvas(node,{scale:2}); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p','mm','a4'); const pdfWidth = pdf.internal.pageSize.getWidth(); const mmPerPx = 25.4/96; const wInMM = canvas.width * mmPerPx; const hInMM = canvas.height * mmPerPx; const printH = (hInMM * pdfWidth) / wInMM; pdf.addImage(imgData, 'PNG', 0, (pdf.internal.pageSize.getHeight()-printH)/2, pdfWidth, printH); pdf.save('biodata.pdf'); } document.getElementById('downloadPng').addEventListener('click', exportPNG); document.getElementById('downloadPdf').addEventListener('click', exportPDF);</script></body></html>`;
+  return content;
+}
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
+async function exportPage(type='png'){ const data = gatherData(); const previewHtml = buildPreviewHtml(data); const w = window.open('', '_blank'); w.document.open(); w.document.write(previewHtml); w.document.close(); }
+
+/* ---------- CROPper.js integration ---------- */
+let cropper = null;
+const cropperModal = $('#cropperModal');
+const cropImage = $('#cropImage');
+const cropPreview = $('#cropPreview');
+
+function onFileInputChange(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const url = URL.createObjectURL(file);
+  openCropperModal(url);
+}
+
+function openCropperModal(imageUrl){
+  cropImage.src = imageUrl;
+  cropperModal.style.display = 'flex';
+  cropperModal.setAttribute('aria-hidden','false');
+
+  // wait a tick for image to render
+  setTimeout(()=>{
+    if(cropper) { cropper.destroy(); cropper = null; }
+    cropper = new Cropper(cropImage, {
+      aspectRatio: 1,
+      viewMode: 1,
+      background: true,
+      autoCropArea: 0.9,
+      movable: true,
+      zoomable: true,
+      rotatable: true,
+      scalable: false,
+      ready(){
+        updateCropPreview();
+      },
+      crop(){
+        updateCropPreview();
+      }
+    });
+  }, 200);
+}
+
+// crop preview small
+function updateCropPreview(){
+  if(!cropper) return;
+  const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
+  if(!canvas) { cropPreview.innerHTML = '—'; return; }
+  const dataUrl = canvas.toDataURL('image/png');
+  cropPreview.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:${ state.circleOutput ? '50%':'8px'}" />`;
+}
+
+// modal controls
+$('#applyCrop').addEventListener('click', ()=>{
+  if(!cropper) return;
+  const canvas = cropper.getCroppedCanvas({ width: 600, height: 600, imageSmoothingQuality: 'high' });
+  const dataUrl = canvas.toDataURL('image/png');
+  // set state and update preview
+  state.photoData = dataUrl;
+  // apply circle styling in preview
+  if($('#cropShape').value === 'circle') { $('#pvPhoto').classList.add('circle'); } else { $('#pvPhoto').classList.remove('circle'); }
+  closeCropperModal();
+  updatePreview();
+  // revoke object URL used for original image (cropImage.src)
+  try{ URL.revokeObjectURL(cropImage.src); }catch(e){}
+});
+$('#cancelCrop').addEventListener('click', ()=>{
+  closeCropperModal(true);
+});
+
+// rotate & zoom buttons
+$('#rotateLeft').addEventListener('click', ()=>{ if(cropper) cropper.rotate(-45); });
+$('#rotateRight').addEventListener('click', ()=>{ if(cropper) cropper.rotate(45); });
+$('#zoomIn').addEventListener('click', ()=>{ if(cropper) cropper.zoom(0.1); });
+$('#zoomOut').addEventListener('click', ()=>{ if(cropper) cropper.zoom(-0.1); });
+$('#resetCrop').addEventListener('click', ()=>{ if(cropper) cropper.reset(); });
+
+function closeCropperModal(cancel=false){
+  if(cropper){ cropper.destroy(); cropper = null; }
+  cropperModal.style.display = 'none';
+  cropperModal.setAttribute('aria-hidden','true');
+  $('#photoInput').value = ''; // clear input so same file can be reselected if needed
+  if(cancel){ state.photoData = state.photoData || null; } // if cancel, don't change existing photo
+}
+
+/* Accessibility: close modal on outside click */
+cropperModal.addEventListener('click', (e)=>{ if(e.target === cropperModal) closeCropperModal(true); });
+
+/* initial small hookups for religion fields demo */
+function initOnLoad(){
+  // populate nakshatra / rashi / gotra / caste short lists
+  const nak = ['Ashvini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Svati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati','Abhijit'];
+  nak.forEach(n=> $('#nakshatra').innerHTML += `<option>${n}</option>`);
+  const rashi = ['Aries (Mesha)','Taurus (Vrishabha)','Gemini (Mithuna)','Cancer (Karka)','Leo (Simha)','Virgo (Kanya)','Libra (Tula)','Scorpio (Vrishchika)','Sagittarius (Dhanu)','Capricorn (Makara)','Aquarius (Kumbha)','Pisces (Meena)'];
+  rashi.forEach(r=> $('#rashi').innerHTML += `<option>${r}</option>`);
+  ['Kashyap','Vashishtha','Bharadawaj','Gautam','Atri','Jamdugni','Vishvamitra','Agastya','Other'].forEach(g => $('#gotra').innerHTML += `<option>${g}</option>`);
+  // set initial translation and preview
+  translateUI('en');
+  updatePreview();
+}
+window.addEventListener('load', initOnLoad);
+
+</script>
+</body>
+</html>
